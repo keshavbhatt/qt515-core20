@@ -1,0 +1,85 @@
+name: qt515-core20
+base: core20 
+version: '5.15.2'
+summary: Qt5.15 runtime for core20
+description: |
+  This snap is to be consumed by various Qt apps which uses Qt 5 packages provided from 
+  Ubuntu official repository.
+  Qt provides C++ classes and QML types for rendering GUI.
+
+grade: stable 
+confinement: strict
+compression: lzo
+
+architectures:
+  - build-on: amd64
+    run-on: amd64
+
+package-repositories:
+  - type: apt
+    formats: [deb]
+    components: [main]
+    suites: [focal]
+    key-id: C65D51784EDC19A871DBDBB710C56D0DE9977759
+    url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.2-focal/ubuntu
+
+
+slots: 
+  qt515-core20:
+    interface: content
+    read: 
+      - /
+
+parts:
+  qt515:
+    plugin: nil
+    stage-packages:
+    # Packages form internal repo
+      - adwaita-icon-theme
+      - dmz-cursor-theme
+      - fcitx-frontend-qt5
+      - fontconfig
+      - gnome-themes-standard
+      - ibus-gtk3
+      - libgdk-pixbuf2.0-0
+      - libglib2.0-0
+      - libglu1-mesa
+      - libibus-1.0-5
+      - libice6
+      - libxkbcommon0
+      - light-themes
+      - locales-all
+      #- qt5-gtk-platformtheme
+      #- qt5-gtk2-platformtheme
+      #- qt5-xdgdesktopportal-platformtheme
+      - shared-mime-info
+      - try: [appmenu-qt5]
+      - ttf-ubuntu-font-family
+      - xdg-user-dirs.
+
+    # Packages form opt/qt515
+      - qt515base
+      - qt515imageformats
+      - qt515multimedia
+      - qt515graphicaleffects
+      - qt515svg
+      - qt515tools
+      - qt515webchannel
+      - qt515webengine
+      - qt515websockets
+      - qt515x11extras
+      - qt515location
+      - qt515wayland
+
+
+  cleanup:
+    after:
+      - qt515
+    plugin: nil
+    override-prime: |
+      set -eux
+      for CRUFT in bug lintian man; do
+        rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
+      done
+      find $SNAPCRAFT_PRIME/usr/share/doc/ -type f -not -name 'copyright' -delete
+      find $SNAPCRAFT_PRIME/usr/share -type d -empty -delete
