@@ -73,9 +73,24 @@ parts:
     plugin: nil
     override-prime: |
       set -eux
+
       for QT_CRUFT in doc examples include; do
         rm -rf $SNAPCRAFT_PRIME/opt/qt515/$QT_CRUFT
       done
+
+      find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.la" -type f -delete
+
+      find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.a" -type f -delete
+
+      find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.cmake" -type f -delete
+
+      find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.prl" -type f -delete
+
+      find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.pc" -type f -delete
+
+      find $SNAPCRAFT_PRIME/opt/qt515 -type d -empty -delete
+
+
       for CRUFT in bug lintian man; do
         rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
       done
