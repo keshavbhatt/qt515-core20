@@ -49,12 +49,12 @@ parts:
       - libxkbcommon0
       - light-themes
       - locales-all
-      #- qt5-gtk-platformtheme #brings system's qt dependencies
-      #- qt5-gtk2-platformtheme #brings system's qt dependencies
-      #- qt5-xdgdesktopportal-platformtheme qt5-xdgdesktopportal-platformtheme
       - shared-mime-info
       - ttf-ubuntu-font-family
       - xdg-user-dirs
+      #- qt5-gtk-platformtheme #brings system's qt dependencies
+      #- qt5-gtk2-platformtheme #brings system's qt dependencies
+      #- qt5-xdgdesktopportal-platformtheme #brings system's qt dependencies
 
     # Packages form opt/qt515
       - qt515base
@@ -74,6 +74,8 @@ parts:
     override-prime: |
       set -eux
 
+      # runtime cleanup ========
+
       for QT_CRUFT in doc examples include; do
         rm -rf $SNAPCRAFT_PRIME/opt/qt515/$QT_CRUFT
       done
@@ -88,11 +90,16 @@ parts:
 
       find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.pc" -type f -delete
 
-      find $SNAPCRAFT_PRIME/opt/qt515 -type d -empty -delete
+      find $SNAPCRAFT_PRIME/opt/qt515/ -type d -empty -delete
 
+
+      # system cleanup ========
 
       for CRUFT in bug lintian man; do
         rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
       done
+
+      #remove everything but keep copyright
       find $SNAPCRAFT_PRIME/usr/share/doc/ -type f -not -name 'copyright' -delete
+
       find $SNAPCRAFT_PRIME/usr/share -type d -empty -delete
