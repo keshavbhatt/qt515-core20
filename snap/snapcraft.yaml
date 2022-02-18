@@ -55,7 +55,7 @@ parts:
       - shared-mime-info
       - try: [appmenu-qt5]
       - ttf-ubuntu-font-family
-      - xdg-user-dirs.
+      - xdg-user-dirs
 
     # Packages form opt/qt515
       - qt515base
