@@ -52,11 +52,13 @@ parts:
       - shared-mime-info
       - ttf-ubuntu-font-family
       - xdg-user-dirs
+      
+    # Desktop integration
       #- qt5-gtk-platformtheme #brings system's qt dependencies
       #- qt5-gtk2-platformtheme #brings system's qt dependencies
       #- qt5-xdgdesktopportal-platformtheme #brings system's qt dependencies
 
-    # Packages form opt/qt515
+    # Qt modules from opt/qt515
       - qt515base
       - qt515imageformats
       - qt515multimedia
@@ -65,6 +67,22 @@ parts:
       - qt515webengine
       - qt515x11extras
       - qt515wayland
+      
+    # Multimedia  
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-bad # many gst plugins lives here
+      - gstreamer1.0-alsa
+      - gstreamer1.0-pulseaudio
+      - gstreamer1.0-libav
+      - gstreamer1.0-x
+     
+    # Additional Packages required by consumers
+      - mpv
+      - ffmpeg
+      - socat
+      - wget
+      - xclip
+      - python3
 
 
   cleanup:
@@ -72,9 +90,10 @@ parts:
       - qt515
     plugin: nil
     override-prime: |
+      
       set -eux
 
-      # runtime cleanup ========
+      # Qt opt/qt515 runtime cleanup ========================================
 
       for QT_CRUFT in doc examples include; do
         rm -rf $SNAPCRAFT_PRIME/opt/qt515/$QT_CRUFT
@@ -93,13 +112,13 @@ parts:
       find $SNAPCRAFT_PRIME/opt/qt515/ -type d -empty -delete
 
 
-      # system cleanup ========
+      # System cleanup ========================================================
 
       for CRUFT in bug lintian man; do
         rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
       done
 
-      #remove everything but keep copyright
+      # remove everything but keep copyright
       find $SNAPCRAFT_PRIME/usr/share/doc/ -type f -not -name 'copyright' -delete
 
       find $SNAPCRAFT_PRIME/usr/share -type d -empty -delete
