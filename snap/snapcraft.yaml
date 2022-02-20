@@ -37,14 +37,11 @@ parts:
     # Packages form internal repo
       - adwaita-icon-theme
       - dmz-cursor-theme
-      - fcitx
       - fontconfig
       - gnome-themes-standard
-      - ibus-gtk3
       - libgdk-pixbuf2.0-0
       - libglib2.0-0
       - libglu1-mesa
-      - libibus-1.0-5
       - libice6
       - libxkbcommon0
       - light-themes
@@ -54,6 +51,10 @@ parts:
       - xdg-user-dirs
       
     # Desktop integration
+      - libfcitx-gclient1
+      - fcitx
+      - ibus-gtk3
+      - libibus-1.0-5
       #- qt5-gtk-platformtheme #brings system's qt dependencies
       #- qt5-gtk2-platformtheme #brings system's qt dependencies
       #- qt5-xdgdesktopportal-platformtheme #brings system's qt dependencies
