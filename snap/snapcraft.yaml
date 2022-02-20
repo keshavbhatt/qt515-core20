@@ -52,6 +52,8 @@ parts:
       
     # Desktop integration
       - libfcitx-gclient1
+      - libfcitx-utils0
+      - fcitx-module-dbus
       - fcitx
       - ibus-gtk3
       - libibus-1.0-5
