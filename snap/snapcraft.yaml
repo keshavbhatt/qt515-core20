@@ -57,6 +57,7 @@ parts:
       - fcitx
       - ibus-gtk3
       - libibus-1.0-5
+      - libcanberra-gtk3-module
       #- qt5-gtk-platformtheme #brings system's qt dependencies
       #- qt5-gtk2-platformtheme #brings system's qt dependencies
       #- qt5-xdgdesktopportal-platformtheme #brings system's qt dependencies
