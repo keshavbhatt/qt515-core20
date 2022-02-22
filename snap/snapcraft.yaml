@@ -79,6 +79,7 @@ parts:
       - gstreamer1.0-pulseaudio
       - gstreamer1.0-libav
       - gstreamer1.0-x
+      - gstreamer1.0-gl
      
     # Additional Packages required by consumers
       - mpv
