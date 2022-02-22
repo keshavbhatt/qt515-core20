@@ -165,7 +165,10 @@ append_dir LD_LIBRARY_PATH "$SNAP_DESKTOP_RUNTIME/lib"
 append_dir PATH "$SNAP_DESKTOP_RUNTIME/usr/bin"
 
 #samba lib path
-append_dir LD_LIBRARY_PATH "$SNAP_DESKTOP_RUNTIME/usr/lib/x86_64-linux-gnu/samba/"
+append_dir LD_LIBRARY_PATH "$SNAP_DESKTOP_RUNTIME/usr/lib/$ARCH/samba/"
+
+#canberra and other gtk3-module lib path
+append_dir LD_LIBRARY_PATH "$SNAP_DESKTOP_RUNTIME/usr/lib/$ARCH/gtk-3.0/modules/"
 
 # XKB config
 export XKB_CONFIG_ROOT="$SNAP_DESKTOP_RUNTIME/usr/share/X11/xkb"
