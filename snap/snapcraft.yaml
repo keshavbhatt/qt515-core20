@@ -86,8 +86,6 @@ parts:
       - socat
       - wget
       - xclip
-      - python3
-
 
   cleanup:
     after:
