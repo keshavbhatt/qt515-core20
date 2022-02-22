@@ -3,8 +3,7 @@ base: core20
 version: '5.15.2'
 summary: Qt5.15 runtime for core20
 description: |
-  This snap is to be consumed by various Qt apps which uses Qt 5 packages provided from 
-  Ubuntu official repository.
+  This snap is to be consumed by various Qt apps which uses Qt 5.15 as their runtime.
   Qt provides C++ classes and QML types for rendering GUI.
 
 grade: stable 
