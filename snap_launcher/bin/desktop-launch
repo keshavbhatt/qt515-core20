@@ -20,6 +20,7 @@ function async_exec() {
   "$@" &
   PIDS[$!]=$*
 }
+
 function wait_for_async_execs() {
   for pid in "${!PIDS[@]}"
   do
@@ -27,8 +28,21 @@ function wait_for_async_execs() {
   done
 }
 
+# runtime snap name declared in consumer's snapcraft environment 
+RUNTIME_NAME="qt515-core20"
+
+# exit as early if the content snap is not connected
+if ! snapctl is-connected $RUNTIME_NAME; then
+  echo -e "ERROR: snap $SNAP_NAME is not connected to the $RUNTIME_NAME content interface.\n"
+  echo -e "Run these commands to make sure required content interface is installed & connected:\n\n"
+  
+  echo -e "snap install $RUNTIME_NAME\n"
+  echo -e "snap connect $SNAP_NAME:$RUNTIME_NAME $RUNTIME_NAME\n"
+  
+  exit 1
+fi
+
 # shellcheck source=/dev/null
-#needs_update=true
 source "$SNAP_USER_DATA/.last_revision" 2>/dev/null || true
 if [ "$SNAP_DESKTOP_LAST_REVISION" = "$SNAP_REVISION" ]; then
   needs_update=false
@@ -141,14 +155,6 @@ function is_subpath() {
   parent="$(realpath "$2")"
   [ "${dir##"${parent}"/}" != "${dir}" ] && return 0 || return 1
 }
-
-#RUNTIME_NAME
-RUNTIME_NAME="qt515-core20"
-
-if ! snapctl is-connected $RUNTIME_NAME; then
-  echo "ERROR: not connected to the $RUNTIME_NAME content interface."
-  exit 1
-fi
 
 #opt/qt515 paths
 append_dir LD_LIBRARY_PATH "$SNAP_DESKTOP_RUNTIME/opt/qt515/lib/$ARCH"
