@@ -40,6 +40,7 @@ parts:
       - gnome-themes-standard
       - libgdk-pixbuf2.0-0
       - libglib2.0-0
+      - libglib2.0-bin
       - libglu1-mesa
       - libice6
       - libxkbcommon0
