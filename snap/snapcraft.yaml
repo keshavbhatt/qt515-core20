@@ -22,7 +22,6 @@ package-repositories:
     key-id: C65D51784EDC19A871DBDBB710C56D0DE9977759
     url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.2-focal/ubuntu
 
-
 slots: 
   qt515-core20:
     interface: content
@@ -51,6 +50,7 @@ parts:
       - xdg-user-dirs
       
     # Desktop integration
+    # (note: do not add anything that pulls qt dependency from official repo)
       - libfcitx-gclient1
       - libfcitx-utils0
       - fcitx-module-dbus
@@ -58,9 +58,6 @@ parts:
       - ibus-gtk3
       - libibus-1.0-5
       - libcanberra-gtk3-module
-      #- qt5-gtk-platformtheme #brings system's qt dependencies
-      #- qt5-gtk2-platformtheme #brings system's qt dependencies
-      #- qt5-xdgdesktopportal-platformtheme #brings system's qt dependencies
 
     # Qt modules from opt/qt515
       - qt515base
@@ -88,9 +85,52 @@ parts:
       - wget
       - xclip
 
-  cleanup:
+  # adwaita-qt widget style
+  adwaita-qt:
     after:
       - qt515
+    build-snaps:
+      - cmake/3.17/stable
+    plugin: cmake
+    source: https://github.com/keshavbhatt/adwaita-qt.git
+    build-packages:
+      - build-essential
+      - qt515base
+      - qt515x11extras
+      - libgl1-mesa-dev
+      - libx11-dev
+      - libx11-xcb-dev
+      - libxcb1-dev
+    override-build: |
+      set -eux
+
+      QT_BASE_DIR=/opt/qt515
+      export QTDIR=$QT_BASE_DIR
+      export PATH=$QT_BASE_DIR/bin:$PATH
+      export LD_LIBRARY_PATH=$QT_BASE_DIR/lib/$SNAPCRAFT_ARCH_TRIPLET:$QT_BASE_DIR/lib:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
+      export PKG_CONFIG_PATH=$QT_BASE_DIR/lib/pkgconfig:${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}
+
+      INSTALL_PATH=${SNAPCRAFT_PART_INSTALL}/opt/qt515/
+      mkdir -p ${INSTALL_PATH}
+
+      mkdir -p build
+      cd build
+      cmake -DCMAKE_INSTALL_PREFIX:PATH=${INSTALL_PATH} -DCMAKE_BUILD_TYPE=Release $SNAPCRAFT_PART_SRC
+      make -j 4
+      make install
+
+      mkdir -p ${INSTALL_PATH}/plugins/styles/
+      cp -r /opt/qt515/plugins/styles/adwaita.so ${INSTALL_PATH}/plugins/styles/adwaita.so
+    prime:
+      - -${INSTALL_PATH}/share/doc
+      - -${INSTALL_PATH}/include
+      - -${INSTALL_PATH}lib/cmake
+      - -${INSTALL_PATH}/lib/$SNAPCRAFT_ARCH_TRIPLET/cmake
+      - -${INSTALL_PATH}/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
+
+  cleanup:
+    after:
+      - adwaita-qt
     plugin: nil
     override-prime: |
       
@@ -101,6 +141,12 @@ parts:
       for QT_CRUFT in doc examples include; do
         rm -rf $SNAPCRAFT_PRIME/opt/qt515/$QT_CRUFT
       done
+
+      rm -rf $SNAPCRAFT_PRIME/opt/qt515/lib/metatypes/
+
+      rm -rf $SNAPCRAFT_PRIME/opt/qt515/lib/cmake/
+
+      rm -rf $SNAPCRAFT_PRIME/opt/qt515/mkspecs/
 
       find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.la" -type f -delete
 
@@ -114,14 +160,10 @@ parts:
 
       find $SNAPCRAFT_PRIME/opt/qt515/ -type d -empty -delete
 
-
       # System cleanup ========================================================
 
-      for CRUFT in bug lintian man; do
+      for CRUFT in bug lintian man doc; do
         rm -rf $SNAPCRAFT_PRIME/usr/share/$CRUFT
       done
-
-      # remove everything but keep copyright
-      find $SNAPCRAFT_PRIME/usr/share/doc/ -type f -not -name 'copyright' -delete
 
       find $SNAPCRAFT_PRIME/usr/share -type d -empty -delete
