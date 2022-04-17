@@ -68,6 +68,11 @@ parts:
       - qt515webengine
       - qt515x11extras
       - qt515wayland
+      # Qt QML types
+      - qt515graphicaleffects
+      - qt515declarative
+      - qt515quickcontrols
+      - qt515quickcontrols2
       
     # Multimedia  
       - gstreamer1.0-plugins-good
