@@ -89,6 +89,7 @@ parts:
       - socat
       - wget
       - xclip
+      - libtag1v5
 
   # adwaita-qt widget style
   adwaita-qt:
