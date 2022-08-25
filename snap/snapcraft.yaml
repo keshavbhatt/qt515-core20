@@ -1,6 +1,6 @@
 name: qt515-core20
 base: core20 
-version: '5.15.2'
+version: '5.15.4'
 summary: Qt5.15 runtime for core20
 description: |
   This snap is to be consumed by various Qt apps which uses Qt 5.15 as their runtime.
@@ -20,7 +20,8 @@ package-repositories:
     components: [main]
     suites: [focal]
     key-id: C65D51784EDC19A871DBDBB710C56D0DE9977759
-    url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.2-focal/ubuntu
+    url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.4-focal/ubuntu
+    
 
 slots: 
   qt515-core20:
