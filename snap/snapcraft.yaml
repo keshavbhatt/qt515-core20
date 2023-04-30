@@ -71,6 +71,7 @@ parts:
       - qt515webengine
       - qt515x11extras
       - qt515wayland
+      - qt515tools
       # Qt QML types
       - qt515graphicaleffects
       - qt515declarative
