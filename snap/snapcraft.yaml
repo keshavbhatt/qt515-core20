@@ -61,6 +61,7 @@ parts:
       - ibus-gtk3
       - libibus-1.0-5
       - libcanberra-gtk3-module
+      - glib-networking
 
     # Qt modules from opt/qt515
       - qt515base
