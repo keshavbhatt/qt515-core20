@@ -96,7 +96,28 @@ parts:
       - xclip
       - libtag1v5
       - python3.9
-      
+
+    override-prime: |
+
+      set -x
+
+      mkdir -p ${SNAPCRAFT_PRIME}/usr/bin/
+
+      cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python
+      #!/bin/sh
+      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.9" "$@"
+      EOF
+
+      cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python3
+      #!/bin/sh
+      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.9" "$@"
+      EOF
+
+      chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python
+      chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python3
+
+      snapcraftctl prime
+
   # adwaita-qt widget style
   adwaita-qt:
     after:
