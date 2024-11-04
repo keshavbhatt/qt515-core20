@@ -95,6 +95,7 @@ parts:
       - wget
       - xclip
       - libtag1v5
+      - python3.9
 
   # adwaita-qt widget style
   adwaita-qt:
