@@ -95,7 +95,7 @@ parts:
       - wget
       - xclip
       - libtag1v5
-      - python3.9
+      - python3.10
 
     override-prime: |
 
@@ -105,12 +105,12 @@ parts:
 
       cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python
       #!/bin/sh
-      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.9" "$@"
+      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.10" "$@"
       EOF
 
       cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python3
       #!/bin/sh
-      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.9" "$@"
+      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.10" "$@"
       EOF
 
       chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python
