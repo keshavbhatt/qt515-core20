@@ -118,7 +118,6 @@ parts:
       - uuid-dev
       - tk-dev
       - libuuid1
-      - libnsl-dev
     override-build: |
       set -eux
       ./configure --prefix=$SNAPCRAFT_PART_INSTALL/usr/local --enable-optimizations
