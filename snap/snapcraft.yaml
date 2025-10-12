@@ -21,7 +21,8 @@ package-repositories:
     suites: [focal]
     key-id: C65D51784EDC19A871DBDBB710C56D0DE9977759
     url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.4-focal/ubuntu
-    
+  - type: apt
+    ppa: deadsnakes/ppa
 
 slots: 
   qt515-core20:
@@ -95,7 +96,7 @@ parts:
       - wget
       - xclip
       - libtag1v5
-      - python3.10
+      - python3.12
 
     override-prime: |
 
@@ -105,12 +106,12 @@ parts:
 
       cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python
       #!/bin/sh
-      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.10" "$@"
+      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.12" "$@"
       EOF
 
       cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python3
       #!/bin/sh
-      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.10" "$@"
+      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.12" "$@"
       EOF
 
       chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python
