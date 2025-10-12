@@ -94,7 +94,6 @@ parts:
       - wget
       - xclip
       - libtag1v5
-      - python3.12
 
   # python 3.12
   python312:
