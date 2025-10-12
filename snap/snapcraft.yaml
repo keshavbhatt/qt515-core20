@@ -21,8 +21,6 @@ package-repositories:
     suites: [focal]
     key-id: C65D51784EDC19A871DBDBB710C56D0DE9977759
     url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.4-focal/ubuntu
-  - type: apt
-    ppa: deadsnakes/ppa
 
 slots: 
   qt515-core20:
@@ -98,26 +96,59 @@ parts:
       - libtag1v5
       - python3.12
 
+  # python 3.12
+  python312:
+    after:
+      - qt515
+    plugin: nil
+    source: https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz
+    source-type: tar
+    build-packages:
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - libffi-dev
+      - liblzma-dev
+      - libncurses5-dev
+      - libgdbm-dev
+      - libdb-dev
+      - uuid-dev
+      - tk-dev
+      - libuuid1
+      - libnsl-dev
+    override-build: |
+      set -eux
+      ./configure --prefix=$SNAPCRAFT_PART_INSTALL/usr/local --enable-optimizations
+      # Limit jobs to 2 to avoid OOM in LXD builds
+      JOBS=$(nproc)
+      if [ "$JOBS" -gt 2 ]; then JOBS=2; fi
+      make -j$JOBS
+      make altinstall DESTDIR=$SNAPCRAFT_PART_INSTALL
+    stage:
+      - usr/local
+    prime:
+      - usr/local
+
     override-prime: |
-
-      set -x
-
-      mkdir -p ${SNAPCRAFT_PRIME}/usr/bin/
-
-      cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python
+      set -eux
+          # Create python/python3 wrapper scripts inside snap
+          mkdir -p ${SNAPCRAFT_PRIME}/usr/bin
+          cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python
       #!/bin/sh
-      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.12" "$@"
+      exec "$SNAP/usr/local/bin/python3.12" "$@"
       EOF
 
-      cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python3
+          cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python3
       #!/bin/sh
-      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.12" "$@"
+      exec "$SNAP/usr/local/bin/python3.12" "$@"
       EOF
 
-      chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python
-      chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python3
+          chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python
+          chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python3
 
-      snapcraftctl prime
 
   # adwaita-qt widget style
   adwaita-qt:
