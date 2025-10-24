@@ -119,7 +119,7 @@ parts:
       - libuuid1
     override-build: |
       set -eux
-      ./configure --prefix=$SNAPCRAFT_PART_INSTALL/usr/local --enable-optimizations
+      ./configure --prefix=/usr/local --enable-optimizations
       # Limit jobs to 2 to avoid OOM in LXD builds
       JOBS=$(nproc)
       if [ "$JOBS" -gt 2 ]; then JOBS=2; fi
@@ -132,20 +132,15 @@ parts:
 
     override-prime: |
       set -eux
-          # Create python/python3 wrapper scripts inside snap
-          mkdir -p ${SNAPCRAFT_PRIME}/usr/bin
-          cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python
+      mkdir -p ${SNAPCRAFT_PRIME}/usr/bin
+
+      for name in python python3; do
+        cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/$name
       #!/bin/sh
       exec "$SNAP/usr/local/bin/python3.12" "$@"
       EOF
-
-          cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python3
-      #!/bin/sh
-      exec "$SNAP/usr/local/bin/python3.12" "$@"
-      EOF
-
-          chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python
-          chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python3
+        chmod +x ${SNAPCRAFT_PRIME}/usr/bin/$name
+      done
 
 
   # adwaita-qt widget style
