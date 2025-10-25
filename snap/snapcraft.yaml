@@ -1,12 +1,12 @@
 name: qt515-core20
-base: core20 
+base: core20
 version: '5.15.4'
 summary: Qt5.15 runtime for core20
 description: |
   This snap is to be consumed by various Qt apps which uses Qt 5.15 as their runtime.
   Qt provides C++ classes and QML types for rendering GUI.
 
-grade: stable 
+grade: stable
 confinement: strict
 compression: lzo
 
@@ -22,17 +22,17 @@ package-repositories:
     key-id: C65D51784EDC19A871DBDBB710C56D0DE9977759
     url: https://ppa.launchpadcontent.net/beineri/opt-qt-5.15.4-focal/ubuntu
 
-slots: 
+slots:
   qt515-core20:
     interface: content
-    read: 
+    read:
       - /
 
 parts:
   qt515:
     plugin: nil
     stage-packages:
-    # Packages form internal repo
+      # Packages from internal repo
       - adwaita-icon-theme
       - dmz-cursor-theme
       - fontconfig
@@ -50,9 +50,9 @@ parts:
       - shared-mime-info
       - ttf-ubuntu-font-family
       - xdg-user-dirs
-      
-    # Desktop integration
-    # (note: do not add anypackage that pulls Qt dependency from official repo)
+
+      # Desktop integration
+      # (note: do not add any package that pulls Qt dependency from official repo)
       - libfcitx-gclient1
       - libfcitx-utils0
       - fcitx-module-dbus
@@ -62,7 +62,7 @@ parts:
       - libcanberra-gtk3-module
       - glib-networking
 
-    # Qt modules from opt/qt515
+      # Qt modules from opt/qt515
       - qt515base
       - qt515imageformats
       - qt515multimedia
@@ -72,22 +72,23 @@ parts:
       - qt515x11extras
       - qt515wayland
       - qt515tools
+
       # Qt QML types
       - qt515graphicaleffects
       - qt515declarative
       - qt515quickcontrols
       - qt515quickcontrols2
-      
-    # Multimedia  
+
+      # Multimedia
       - gstreamer1.0-plugins-good
-      - gstreamer1.0-plugins-bad # many gst plugins lives here
+      - gstreamer1.0-plugins-bad # many gst plugins live here
       - gstreamer1.0-alsa
       - gstreamer1.0-pulseaudio
       - gstreamer1.0-libav
       - gstreamer1.0-x
       - gstreamer1.0-gl
-     
-    # Additional Packages required by consumers
+
+      # Additional packages required by consumers
       - mpv
       - ffmpeg
       - socat
@@ -95,7 +96,7 @@ parts:
       - xclip
       - libtag1v5
 
-  # python 3.12
+  # Python 3.12 build for core20
   python312:
     after:
       - qt515
@@ -119,29 +120,26 @@ parts:
       - libuuid1
     override-build: |
       set -eux
-      ./configure --prefix=/usr/local --enable-optimizations
-      # Limit jobs to 2 to avoid OOM in LXD builds
+      ./configure --prefix=/usr --enable-optimizations
       JOBS=$(nproc)
       if [ "$JOBS" -gt 2 ]; then JOBS=2; fi
       make -j$JOBS
       make altinstall DESTDIR=$SNAPCRAFT_PART_INSTALL
     stage:
-      - usr/local
+      - usr
     prime:
-      - usr/local
-
+      - usr
     override-prime: |
       set -eux
       mkdir -p ${SNAPCRAFT_PRIME}/usr/bin
 
       for name in python python3; do
         cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/$name
-      #!/bin/sh
-      exec "$SNAP/usr/local/bin/python3.12" "$@"
-      EOF
+#!/bin/sh
+exec "$SNAP/usr/bin/python3.12" "$@"
+EOF
         chmod +x ${SNAPCRAFT_PRIME}/usr/bin/$name
       done
-
 
   # adwaita-qt widget style
   adwaita-qt:
@@ -191,7 +189,6 @@ parts:
       - adwaita-qt
     plugin: nil
     override-prime: |
-      
       set -eux
 
       # Qt opt/qt515 runtime cleanup ========================================
@@ -201,21 +198,14 @@ parts:
       done
 
       rm -rf $SNAPCRAFT_PRIME/opt/qt515/lib/metatypes/
-
       rm -rf $SNAPCRAFT_PRIME/opt/qt515/lib/cmake/
-
       rm -rf $SNAPCRAFT_PRIME/opt/qt515/mkspecs/
 
       find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.la" -type f -delete
-
       find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.a" -type f -delete
-
       find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.cmake" -type f -delete
-
       find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.prl" -type f -delete
-
       find $SNAPCRAFT_PRIME/opt/qt515/ -name "*.pc" -type f -delete
-
       find $SNAPCRAFT_PRIME/opt/qt515/ -type d -empty -delete
 
       # System cleanup ========================================================
