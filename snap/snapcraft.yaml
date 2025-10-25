@@ -135,9 +135,9 @@ parts:
 
       for name in python python3; do
         cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/$name
-#!/bin/sh
-exec "$SNAP/usr/bin/python3.12" "$@"
-EOF
+        #!/bin/sh
+        exec "$SNAP/usr/bin/python3.12" "$@"
+        EOF
         chmod +x ${SNAPCRAFT_PRIME}/usr/bin/$name
       done
 
