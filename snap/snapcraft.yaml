@@ -120,7 +120,7 @@ parts:
       - libuuid1
     override-build: |
       set -eux
-      ./configure --prefix=/usr --enable-optimizations
+      ./configure --prefix=/usr --enable-optimizations --disable-test-modules
       JOBS=$(nproc)
       if [ "$JOBS" -gt 2 ]; then JOBS=2; fi
       make -j$JOBS
