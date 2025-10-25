@@ -130,16 +130,43 @@ parts:
     prime:
       - usr
     override-prime: |
-      set -eux
-      mkdir -p ${SNAPCRAFT_PRIME}/usr/bin
+        set -eux
 
-      for name in python python3; do
-        cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/$name
+        mkdir -p "${SNAPCRAFT_PRIME}/usr/bin"
+
+        # Create python symlink/wrapper
+        cat <<'EOF' > "${SNAPCRAFT_PRIME}/usr/bin/python"
         #!/bin/sh
         exec "$SNAP/usr/bin/python3.12" "$@"
         EOF
-        chmod +x ${SNAPCRAFT_PRIME}/usr/bin/$name
-      done
+        chmod +x "${SNAPCRAFT_PRIME}/usr/bin/python"
+
+        # Create python3 symlink/wrapper
+        cat <<'EOF' > "${SNAPCRAFT_PRIME}/usr/bin/python3"
+        #!/bin/sh
+        exec "$SNAP/usr/bin/python3.12" "$@"
+        EOF
+        chmod +x "${SNAPCRAFT_PRIME}/usr/bin/python3"
+    override-prime: |
+
+      set -x
+
+      mkdir -p "${SNAPCRAFT_PRIME}/usr/bin/"
+
+      cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python
+      #!/bin/sh
+      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.12" "$@"
+      EOF
+
+      cat <<'EOF' > ${SNAPCRAFT_PRIME}/usr/bin/python3
+      #!/bin/sh
+      exec "$SNAP_DESKTOP_RUNTIME/usr/bin/python3.12" "$@"
+      EOF
+
+      chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python
+      chmod +x ${SNAPCRAFT_PRIME}/usr/bin/python3
+
+      snapcraftctl prime
 
   # adwaita-qt widget style
   adwaita-qt:
